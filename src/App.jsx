@@ -1,6 +1,8 @@
 import { RouterProvider } from 'react-router-dom';
 
 // project import
+import { JWTProvider as AuthProvider } from 'contexts/JWTContext';
+
 import router from 'routes';
 import ThemeCustomization from 'themes';
 
@@ -12,7 +14,9 @@ export default function App() {
   return (
     <ThemeCustomization>
       <ScrollTop>
-        <RouterProvider router={router} />
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
       </ScrollTop>
     </ThemeCustomization>
   );

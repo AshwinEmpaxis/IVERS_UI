@@ -18,6 +18,7 @@ const RootStyle = styled(BrowserView)({
 // scroll bar wrapper
 const SimpleBarStyle = styled(SimpleBar)(({ theme }) => ({
   maxHeight: '100%',
+  marginTop: '1rem',
   '& .simplebar-scrollbar': {
     '&:before': {
       background: alpha(theme.palette.grey[500], 0.48)

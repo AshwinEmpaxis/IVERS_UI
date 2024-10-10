@@ -27,7 +27,7 @@ export default function AuthFooter() {
             variant="subtitle2"
             color="secondary"
             component={Link}
-            href="https://codedthemes.com"
+            href="https://www.empaxis.com"
             target="_blank"
             underline="hover"
           >
@@ -37,7 +37,7 @@ export default function AuthFooter() {
             variant="subtitle2"
             color="secondary"
             component={Link}
-            href="https://codedthemes.com"
+            href="https://www.empaxis.com"
             target="_blank"
             underline="hover"
           >
@@ -47,7 +47,7 @@ export default function AuthFooter() {
             variant="subtitle2"
             color="secondary"
             component={Link}
-            href="https://codedthemes.com"
+            href="https://www.empaxis.com"
             target="_blank"
             underline="hover"
           >

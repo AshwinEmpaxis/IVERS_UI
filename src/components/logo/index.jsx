@@ -22,7 +22,7 @@ const LogoSection = ({ sx, to }) => {
           variant="outlined"
           size="small"
           color="secondary"
-          sx={{ mt: 0.5, ml: 1, fontSize: '0.725rem', height: 20, '& .MuiChip-label': { px: 0.5 } }}
+          sx={{ mt: 0.5, ml: 1, fontSize: '0.625rem', height: 15, '& .MuiChip-label': { px: 0.5 } }}
         />
       </Stack>
     </ButtonBase>

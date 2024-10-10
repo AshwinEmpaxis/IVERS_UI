@@ -25,7 +25,7 @@ const support = {
       id: 'documentation',
       title: 'Documentation',
       type: 'item',
-      url: '',
+      url: '/documentation',
       icon: icons.QuestionOutlined,
       external: true,
       target: true

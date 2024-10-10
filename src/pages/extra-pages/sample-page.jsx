@@ -1,22 +1,23 @@
 // src/SamplePage.js
 
 import React, { useState } from 'react';
-import { Typography, Box, Grid, Button } from '@mui/material';
+import { Typography, Box, Grid, Button, LinearProgress } from '@mui/material';
 import MainCard from 'components/MainCard';
 import FilesDropzone from 'components/FilesDropzone/FilesDropzone';
 import FileCard from 'components/FilesDropzone/FileCard';
 
 function SamplePage() {
   const [files, setFiles] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState({});
 
   const handleFilesAdded = (newFiles) => {
-    const mappedFiles = newFiles.map((file) => ({
+    const validFiles = newFiles.map((file) => ({
       mimeType: file.type,
       url: URL.createObjectURL(file),
       name: file.name,
       size: file.size
     }));
-    setFiles((prevFiles) => [...prevFiles, ...mappedFiles]);
+    setFiles((prevFiles) => [...prevFiles, ...validFiles]);
   };
 
   const handleRemoveFile = (fileName) => {
@@ -39,6 +40,23 @@ function SamplePage() {
     setFiles([]);
   };
 
+  const handleUpload = () => {
+    console.log('Uploading files:', files);
+
+    // Simulating upload progress
+    files.forEach((file, index) => {
+      setTimeout(
+        () => {
+          setUploadProgress((prevProgress) => ({
+            ...prevProgress,
+            [file.name]: 100
+          }));
+        },
+        (index + 1) * 1000
+      );
+    });
+  };
+
   return (
     <MainCard title="File Upload">
       <Typography variant="body1" gutterBottom>
@@ -46,8 +64,9 @@ function SamplePage() {
       </Typography>
       <FilesDropzone
         onFilesAdded={handleFilesAdded}
-        accept="image/*,application/pdf"
+        accept={['.csv', '.pdf', '.xls', '.xlsx', '.png', '.svg', '.jpg', '.jpeg']}
         maxSize={5 * 1024 * 1024} // 5 MB
+        multiple={false}
       />
       {files.length > 0 && (
         <Box mt={3}>
@@ -55,10 +74,21 @@ function SamplePage() {
             {files.map((file) => (
               <Grid item xs={12} sm={6} md={4} key={file.name}>
                 <FileCard file={file} onRemove={handleRemoveFile} />
+                {uploadProgress[file.name] !== undefined && (
+                  <Box mt={1}>
+                    <LinearProgress variant="determinate" value={uploadProgress[file.name] || 0} />
+                    <Typography variant="body2" color="textSecondary">
+                      {`${uploadProgress[file.name] || 0}%`}
+                    </Typography>
+                  </Box>
+                )}
               </Grid>
             ))}
           </Grid>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button onClick={handleUpload} color="primary" variant="contained" sx={{ mr: 2 }}>
+              Upload
+            </Button>
             <Button onClick={handleRemoveAll} color="error" variant="contained">
               Remove All
             </Button>

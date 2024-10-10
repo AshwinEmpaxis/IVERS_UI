@@ -1,5 +1,4 @@
 // src/components/FilesDropzone/FileCard.js
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent, CardMedia, IconButton, Typography, Box, Tooltip } from '@mui/material';

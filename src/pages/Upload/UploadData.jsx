@@ -5,8 +5,9 @@ import { Typography, Box, Grid, Button, LinearProgress } from '@mui/material';
 import MainCard from 'components/MainCard';
 import FilesDropzone from 'components/FilesDropzone/FilesDropzone';
 import FileCard from 'components/FilesDropzone/FileCard';
+import Example from './EXTable';
 
-function SamplePage() {
+function Upload() {
   const [files, setFiles] = useState([]);
   const [uploadProgress, setUploadProgress] = useState({});
 
@@ -64,7 +65,7 @@ function SamplePage() {
       </Typography>
       <FilesDropzone
         onFilesAdded={handleFilesAdded}
-        accept={['.csv', '.pdf', '.xls', '.xlsx', '.png', '.svg', '.jpg', '.jpeg']}
+        accept={['.csv', '.pdf', '.xls', '.xlsx']}
         maxSize={5 * 1024 * 1024} // 5 MB
         multiple={false}
       />
@@ -95,8 +96,11 @@ function SamplePage() {
           </Box>
         </Box>
       )}
+      <Box>
+        <Example />
+      </Box>
     </MainCard>
   );
 }
 
-export default SamplePage;
+export default Upload;

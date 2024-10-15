@@ -10,7 +10,9 @@ const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 
 // render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
+const UploadData = Loadable(lazy(() => import('pages/Upload/UploadData')));
+const Viewdata = Loadable(lazy(() => import('pages/ViewData/Viewdata')));
+
 const NotFound = Loadable(lazy(() => import('./NotFound')));
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -36,8 +38,12 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'sample-page',
-      element: <SamplePage />
+      path: 'upload-file',
+      element: <UploadData />
+    },
+    {
+      path: 'view-data',
+      element: <Viewdata />
     },
     {
       path: 'shadow',

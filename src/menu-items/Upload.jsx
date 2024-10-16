@@ -1,10 +1,11 @@
 // assets
-import { ChromeOutlined, QuestionOutlined } from '@ant-design/icons';
+import { ChromeOutlined, QuestionOutlined, CloudUploadOutlined, EyeTwoTone } from '@ant-design/icons';
 
-// icons
 const icons = {
   ChromeOutlined,
-  QuestionOutlined
+  QuestionOutlined,
+  CloudUploadOutlined,
+  EyeTwoTone
 };
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
@@ -19,13 +20,21 @@ const Upload = {
       title: 'Upload Files',
       type: 'item',
       url: '/upload-file',
-      icon: icons.ChromeOutlined
+      icon: icons.CloudUploadOutlined
     },
     {
       id: 'view-data',
       title: 'View Data',
       type: 'item',
       url: '/view-data',
+      icon: icons.EyeTwoTone
+    },
+
+    {
+      id: 'generated-reports',
+      title: 'Generated-Data',
+      type: 'item',
+      url: '/generated-reports',
       icon: icons.ChromeOutlined
     }
     // {

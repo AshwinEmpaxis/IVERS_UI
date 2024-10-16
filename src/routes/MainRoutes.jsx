@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 // project import
 import Loadable from 'components/Loadable';
-import Dashboard from 'layout/Dashboard';
+import DashboardLayout from 'layout/Dashboard';
 
 const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
@@ -13,29 +13,20 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const UploadData = Loadable(lazy(() => import('pages/Upload/UploadData')));
 const Viewdata = Loadable(lazy(() => import('pages/ViewData/Viewdata')));
 
+//Generate Reports
+const TabIndexIverseReports = Loadable(lazy(() => import('pages/GeneratedReports/TabIndexIverseReports')));
+
 const NotFound = Loadable(lazy(() => import('./NotFound')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
   path: '/',
-  element: <Dashboard />,
+  element: <DashboardLayout />, // Use DashboardLayout as the main layout
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
-    },
-    {
-      path: 'color',
-      element: <Color />
-    },
-    {
-      path: 'dashboard',
-      children: [
-        {
-          path: 'default',
-          element: <DashboardDefault />
-        }
-      ]
+      element: <Navigate to="upload-file" replace /> // Navigate to upload-file as default
     },
     {
       path: 'upload-file',
@@ -44,6 +35,14 @@ const MainRoutes = {
     {
       path: 'view-data',
       element: <Viewdata />
+    },
+    {
+      path: 'generated-reports',
+      element: <TabIndexIverseReports />
+    },
+    {
+      path: 'color',
+      element: <Color />
     },
     {
       path: 'shadow',

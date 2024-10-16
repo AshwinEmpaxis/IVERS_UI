@@ -3,22 +3,21 @@ import axios from 'axios';
 import { Box, Grid, Card, CardContent, Typography, Button, Paper, TextField } from '@mui/material';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import ExportButton from 'utils/ExportButton';
-const API_URL = 'http://localhost:55411/Service.svc'; // Your actual API URL
+const API_URL = 'http://localhost:55411/Service.svc';
 
 const DynamicDashboard = () => {
-  const [tables, setTables] = useState([]); // To store table information (table name, record count, last updated date)
-  const [selectedTable, setSelectedTable] = useState(null); // To store selected table data
-  const [loading, setLoading] = useState(false); // Loading state for fetching data
-  const [searchQuery, setSearchQuery] = useState(''); // For searching in the table
-  const [filteredData, setFilteredData] = useState([]); // Filtered data based on search
+  const [tables, setTables] = useState([]);
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
 
-  // Fetch table count and last updated data
   const fetchTables = async () => {
     try {
       const response = await axios.get(`${API_URL}/countLoadedDataService`);
       const formattedData = response.data.map((item) => {
         const key = item[0].Key; // Table name (e.g., "RPS", "AlphaDesk")
-        const [records, lastUpdated] = item[0].Value.split('#'); // Split the record count and last updated date
+        const [records, lastUpdated] = item[0].Value.split('#');
 
         return {
           TableName: key,

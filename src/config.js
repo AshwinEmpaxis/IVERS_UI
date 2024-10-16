@@ -50,3 +50,8 @@ export const apiEndpoints = {
   deleteLookupEntry: `${HOST_API_KEY}/api/UploadFile/Lookupdlt`,
   getAllLookups: `${HOST_API_KEY}/api/UploadFile/Alllookup`
 };
+
+export const API = {
+  // BASE_URL: 'http://localhost:6060/Service.svc'
+  BASE_URL: 'http://localhost:55411/Service.svc'
+};

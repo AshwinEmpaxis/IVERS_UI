@@ -5,7 +5,7 @@ import { Typography, Box, Grid, Button, LinearProgress } from '@mui/material';
 import MainCard from 'components/MainCard';
 import FilesDropzone from 'components/FilesDropzone/FilesDropzone';
 import FileCard from 'components/FilesDropzone/FileCard';
-import Example from './EXTable';
+// import Example from './EXTable';
 
 function Upload() {
   const [files, setFiles] = useState([]);
@@ -96,9 +96,7 @@ function Upload() {
           </Box>
         </Box>
       )}
-      <Box>
-        <Example />
-      </Box>
+      <Box>{/* <Example /> */}</Box>
     </MainCard>
   );
 }

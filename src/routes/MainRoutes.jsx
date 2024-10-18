@@ -14,7 +14,7 @@ const UploadData = Loadable(lazy(() => import('pages/Upload/UploadData')));
 const Viewdata = Loadable(lazy(() => import('pages/ViewData/Viewdata')));
 
 //Generate Reports
-const TabIndexIverseReports = Loadable(lazy(() => import('pages/GeneratedReports/TabIndexIverseReports')));
+const TabIndexReports = Loadable(lazy(() => import('pages/GeneratedReports/ReportTabIndex')));
 
 const NotFound = Loadable(lazy(() => import('./NotFound')));
 
@@ -38,7 +38,7 @@ const MainRoutes = {
     },
     {
       path: 'generated-reports',
-      element: <TabIndexIverseReports />
+      element: <TabIndexReports />
     },
     {
       path: 'color',

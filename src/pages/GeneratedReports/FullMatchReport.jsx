@@ -1,84 +1,153 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { MaterialReactTable } from 'material-react-table';
-import { Box, Button, Paper, Stack } from '@mui/material';
+import React, { useMemo } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
 import { Helmet } from 'react-helmet';
-import { SaveAlt as SaveAltIcon } from '@mui/icons-material';
-import { CSVLink } from 'react-csv';
-import * as XLSX from 'xlsx';
+import { citiesList, usStateList, data } from 'helpers/mock/makedata';
+import dayjs from 'dayjs';
+import ExportData from 'components/Export/ExportData';
 
-const FullMatch = () => {
-  const [data] = useState([
-    { FundName: 'Fund A', Ticker: 'AAA' },
-    { FundName: 'Fund B', Ticker: 'BBB' },
-    { FundName: 'Fund C', Ticker: 'CCC' },
-    { FundName: 'Fund D', Ticker: 'DDD' },
-    { FundName: 'Fund E', Ticker: 'EEE' }
-  ]);
-
-  // CSV export reference
-  const csvLinkRef = useRef(null);
-
-  // XLSX export function
-  const exportToXLSX = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-    XLSX.writeFile(workbook, 'table_data.xlsx');
-  };
-
-  // Defining columns using useMemo for better performance
+const FullMatchReport = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'FundName', // key to access the field in data
-        header: 'Fund Name',
+        header: 'Status',
+        accessorFn: (row) => (row.isActive ? 'true' : 'false'),
+        id: 'isActive',
+        filterVariant: 'checkbox',
+        Cell: ({ cell }) => (cell.getValue() === 'true' ? 'Active' : 'Inactive'),
         size: 200
       },
       {
-        accessorKey: 'Ticker',
-        header: 'Ticker',
-        size: 200
+        accessorKey: 'name',
+        header: 'Name',
+        filterVariant: 'text',
+        size: 250
+      },
+      {
+        accessorKey: 'salary',
+        header: 'Salary',
+        size: 250,
+        enableClickToCopy: true,
+
+        Cell: ({ cell }) =>
+          cell.getValue().toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          }),
+        filterVariant: 'range-slider',
+        filterFn: 'betweenInclusive',
+        muiFilterSliderProps: {
+          marks: true,
+          max: 200000,
+          min: 30000,
+          step: 10000,
+          valueLabelFormat: (value) =>
+            value.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            })
+        }
+      },
+      {
+        accessorKey: 'age',
+        header: 'Age',
+        filterVariant: 'range',
+        filterFn: 'between',
+        size: 250
+      },
+      {
+        accessorKey: 'city',
+        header: 'City',
+        filterVariant: 'select',
+        filterSelectOptions: citiesList,
+        size: 250
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+        filterVariant: 'multi-select',
+        filterSelectOptions: usStateList,
+        size: 300
+      },
+      {
+        accessorFn: (row) => (row.hireDate ? dayjs(row.hireDate) : null),
+        id: 'hireDate',
+        header: 'Hire Date',
+        filterVariant: 'date',
+        sortingFn: 'datetime',
+        Cell: ({ cell }) => dayjs(cell.getValue()).format('DD/MM/YYYY'),
+        muiFilterDatePickerProps: { format: 'DD/MM/YYYY' },
+        size: 250
+      },
+      {
+        accessorFn: (row) => new Date(row.arrivalTime),
+        id: 'arrivalTime',
+        header: 'Arrival Time',
+        filterVariant: 'datetime-range',
+        Cell: ({ cell }) => (cell.getValue() ? dayjs(cell.getValue()).format('DD/MM/YYYY HH:mm:ss') : ''),
+        size: 380
+      },
+      {
+        accessorFn: (row) => new Date(row.departureTime),
+        id: 'departureTime',
+        header: 'Departure Time',
+        filterVariant: 'time-range',
+        Cell: ({ cell }) => (cell.getValue() ? dayjs(cell.getValue()).format('HH:mm:ss') : ''),
+        size: 380
       }
     ],
     []
   );
 
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    enableRowSelection: true,
+
+    renderTopToolbarCustomActions: () => (
+      <>
+        <ExportData
+          color="info"
+          variant="contained"
+          data={data}
+          columns={columns}
+          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml', 'json']}
+          ExportFileName="FullMatchReport"
+          isLoading={false}
+          componentVariant="Menu"
+        />
+      </>
+    ),
+    enableRowNumbers: true,
+    rowNumberDisplayMode: 'original',
+    enablePagination: true,
+    paginationDisplayMode: 'pages',
+    muiPaginationProps: {
+      color: 'secondary',
+      rowsPerPageOptions: [10, 25, 50, 100],
+      shape: 'rounded',
+      variant: 'outlined'
+    },
+    enableColumnResizing: true,
+    enableColumnDragging: true,
+    enableColumnOrdering: true,
+    muiTableBodyProps: {
+      sx: {
+        '& tr:nth-of-type(odd) > td': {
+          backgroundColor: '#e6f4ff'
+        }
+      }
+    }
+  });
+
   return (
-    <Box component={Paper} p={2}>
+    <>
       <Helmet>
-        <title>Missing Reports</title>
+        <title>FullMatch Report</title>
       </Helmet>
 
-      {/* CSV Export Hidden Link */}
-      <CSVLink
-        data={data}
-        headers={columns.map((col) => ({ label: col.header, key: col.accessorKey }))}
-        filename="table_data.csv"
-        ref={csvLinkRef}
-        style={{ display: 'none' }}
-      />
-
-      {/* Material React Table */}
-      <MaterialReactTable
-        columns={columns}
-        data={data}
-        enableSorting={true} // Enables sorting on columns
-        enableFullScreenToggle={true} // Full screen toggle
-        enableTopToolbar={true} // Displays the top toolbar with buttons
-        renderTopToolbarCustomActions={() => (
-          <Stack direction="row" spacing={2}>
-            {/* Export Buttons */}
-            <Button variant="contained" startIcon={<SaveAltIcon />} color="primary" onClick={() => csvLinkRef.current.link.click()}>
-              Export CSV
-            </Button>
-            <Button variant="contained" startIcon={<SaveAltIcon />} color="secondary" onClick={exportToXLSX}>
-              Export XLSX
-            </Button>
-          </Stack>
-        )}
-      />
-    </Box>
+      <MaterialReactTable table={table} />
+    </>
   );
 };
 
-export default FullMatch;
+export default FullMatchReport;

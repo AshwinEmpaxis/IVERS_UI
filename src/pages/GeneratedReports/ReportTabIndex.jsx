@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Tab, Tabs, Box, Divider } from '@mui/material';
-import { Helmet } from 'react-helmet';
 import MainCard from 'components/MainCard';
 import FullMatch from './FullMatchReport';
 import Tolerance from './ToleranceReports';

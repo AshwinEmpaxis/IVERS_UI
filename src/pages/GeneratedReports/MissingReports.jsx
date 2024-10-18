@@ -1,12 +1,9 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
-import { Box, Button, Paper, Stack } from '@mui/material';
 import { Helmet } from 'react-helmet';
-import { SaveAlt as SaveAltIcon } from '@mui/icons-material';
-import { CSVLink } from 'react-csv';
-import * as XLSX from 'xlsx';
 import { citiesList, usStateList, data } from 'helpers/mock/makedata';
 import dayjs from 'dayjs';
+import ExportData from 'components/Export/ExportData';
 
 const MissingReports = () => {
   const csvLinkRef = useRef(null);
@@ -103,13 +100,6 @@ const MissingReports = () => {
     []
   );
 
-  const exportToXLSX = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-    XLSX.writeFile(workbook, 'table_data.xlsx');
-  };
-
   const table = useMaterialReactTable({
     columns,
     data,
@@ -117,14 +107,16 @@ const MissingReports = () => {
     columnFilterDisplayMode: 'popover',
     renderTopToolbarCustomActions: () => (
       <>
-        <Stack direction="row" spacing={1}>
-          <Button variant="contained" startIcon={<SaveAltIcon />} color="primary" onClick={() => csvLinkRef.current.link.click()}>
-            Export CSV
-          </Button>
-          <Button variant="contained" startIcon={<SaveAltIcon />} color="secondary" onClick={exportToXLSX}>
-            Export XLSX
-          </Button>
-        </Stack>
+        <ExportData
+          color="info"
+          variant="contained"
+          data={data}
+          columns={columns}
+          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml', 'json']}
+          ExportFileName="MissingReports"
+          isLoading={false}
+          componentVariant="Menu"
+        />
       </>
     ),
     enableRowNumbers: true,
@@ -139,25 +131,24 @@ const MissingReports = () => {
     },
     enableColumnResizing: true,
     enableColumnDragging: true,
-    enableColumnOrdering: true
+    enableColumnOrdering: true,
+    muiTableBodyProps: {
+      sx: {
+        '& tr:nth-of-type(odd) > td': {
+          backgroundColor: '#e6f4ff'
+        }
+      }
+    }
   });
 
   return (
-    <Box component={Paper}>
+    <>
       <Helmet>
-        <title>Static Price Preview</title>
+        <title>Missing Reports</title>
       </Helmet>
 
-      <CSVLink
-        data={data}
-        headers={columns.map((col) => ({ label: col.header, key: col.accessorKey || col.id }))}
-        filename="table_data.csv"
-        ref={csvLinkRef}
-        style={{ display: 'none' }}
-      />
-
       <MaterialReactTable table={table} />
-    </Box>
+    </>
   );
 };
 

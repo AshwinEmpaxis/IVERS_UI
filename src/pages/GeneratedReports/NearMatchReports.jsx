@@ -1,10 +1,18 @@
-import React from 'react';
-import { Box, Paper, Snackbar, Alert } from '@mui/material';
+import React, { useRef, useState } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { Box, Button, Paper, Stack } from '@mui/material';
 import { Helmet } from 'react-helmet';
-import SharedTableComponent from './../../utils/DynamicTable';
+import { SaveAlt as SaveAltIcon } from '@mui/icons-material';
+import { CSVLink } from 'react-csv';
+import * as XLSX from 'xlsx';
+// import { citiesList, usStateList, data as dummyData } from 'helpers/mock/makedata';
 
-const BreakRecon = ({ error }) => {
-  // Static mock data for now
+const MissingReports = () => {
+  // const [data1, setData1] = useState(dummyData);
+  // console.log('data dummyData', data1);
+
+  const csvLinkRef = useRef(null);
+
   const data = [
     { FundName: 'Fund A', Ticker: 'AAA' },
     { FundName: 'Fund B', Ticker: 'BBB' },
@@ -13,10 +21,6 @@ const BreakRecon = ({ error }) => {
     { FundName: 'Fund E', Ticker: 'EEE' }
   ];
 
-  // Add unique IDs to the static data
-  const dataWithIds = data.map((row, index) => ({ id: index + 1, ...row }));
-
-  // Define static columns for the table
   const columns = [
     {
       accessorKey: 'FundName',
@@ -30,19 +34,47 @@ const BreakRecon = ({ error }) => {
     }
   ];
 
+  const exportToXLSX = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    XLSX.writeFile(workbook, 'table_data.xlsx');
+  };
+
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    renderTopToolbarCustomActions: () => (
+      <>
+        <Stack direction="row" spacing={1}>
+          <Button variant="contained" startIcon={<SaveAltIcon />} color="primary" onClick={() => csvLinkRef.current.link.click()}>
+            Export CSV
+          </Button>
+          <Button variant="contained" startIcon={<SaveAltIcon />} color="secondary" onClick={exportToXLSX}>
+            Export XLSX
+          </Button>
+        </Stack>
+      </>
+    )
+  });
+
   return (
     <Box component={Paper}>
       <Helmet>
         <title>Static Price Preview</title>
       </Helmet>
-      <SharedTableComponent data={dataWithIds} columns={columns} />
-      {error && (
-        <Snackbar open autoHideDuration={6000}>
-          <Alert severity="error">{error}</Alert>
-        </Snackbar>
-      )}
+
+      <CSVLink
+        data={data}
+        headers={columns.map((col) => ({ label: col.header, key: col.accessorKey }))}
+        filename="table_data.csv"
+        ref={csvLinkRef}
+        style={{ display: 'none' }}
+      />
+
+      <MaterialReactTable table={table} />
     </Box>
   );
 };
 
-export default BreakRecon;
+export default MissingReports;

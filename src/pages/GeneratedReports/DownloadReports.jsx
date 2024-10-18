@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import axios from 'axios';
 // import Loader from '../../FMAD/FMADGenerateReport/Loader';
 import { API } from 'config';
-import { Box } from '@mui/system';
 
 const GenerateReport = () => {
   const [blobFileLoading, setBlobFileLoading] = useState(false);

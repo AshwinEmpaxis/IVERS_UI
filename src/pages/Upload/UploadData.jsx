@@ -59,7 +59,7 @@ function Upload() {
   };
 
   return (
-    <MainCard title="File Upload">
+    <MainCard>
       <Typography variant="body1" gutterBottom>
         Upload your files by dragging and dropping them into the area below or by clicking to select files.
       </Typography>

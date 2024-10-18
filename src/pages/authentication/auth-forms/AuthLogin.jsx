@@ -49,7 +49,7 @@ export default function AuthLogin({ isDemo = false }) {
 
     // Check if credentials match
     if (values.email === defaultUsername && values.password === defaultPassword) {
-      navigate('/dashboard');
+      navigate('/');
     } else {
       setErrors({ submit: 'Invalid username or password' });
     }

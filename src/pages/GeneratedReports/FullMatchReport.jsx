@@ -1,54 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Paper, Snackbar, Alert } from '@mui/material';
+import React, { useMemo, useRef, useState } from 'react';
+import { MaterialReactTable } from 'material-react-table';
+import { Box, Button, Paper, Stack } from '@mui/material';
 import { Helmet } from 'react-helmet';
-import SharedTableComponent from './../../utils/DynamicTable';
-import axios from 'axios';
+import { SaveAlt as SaveAltIcon } from '@mui/icons-material';
+import { CSVLink } from 'react-csv';
+import * as XLSX from 'xlsx';
 
-const FullMatch = ({ error }) => {
-  const [data, setData] = useState([]);
-  const [fetchError, setFetchError] = useState(null);
-  // Define static columns for the table
-  const columns = [
-    {
-      accessorKey: 'FundName',
-      header: 'Fund Name',
-      size: 200
-    },
-    {
-      accessorKey: 'Ticker',
-      header: 'Ticker',
-      size: 200
-    }
-  ];
+const FullMatch = () => {
+  const [data] = useState([
+    { FundName: 'Fund A', Ticker: 'AAA' },
+    { FundName: 'Fund B', Ticker: 'BBB' },
+    { FundName: 'Fund C', Ticker: 'CCC' },
+    { FundName: 'Fund D', Ticker: 'DDD' },
+    { FundName: 'Fund E', Ticker: 'EEE' }
+  ]);
 
-  useEffect(() => {
-    // Fetch data from API endpoint
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('');
-        const responseData = response.data;
+  // CSV export reference
+  const csvLinkRef = useRef(null);
 
-        // Assuming responseData is an array of objects matching the required structure
-        setData(responseData);
-      } catch (err) {
-        setFetchError('Failed to fetch data. Please try again later.');
+  // XLSX export function
+  const exportToXLSX = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    XLSX.writeFile(workbook, 'table_data.xlsx');
+  };
+
+  // Defining columns using useMemo for better performance
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'FundName', // key to access the field in data
+        header: 'Fund Name',
+        size: 200
+      },
+      {
+        accessorKey: 'Ticker',
+        header: 'Ticker',
+        size: 200
       }
-    };
-
-    fetchData();
-  }, []); // Empty dependency array to run only once on component mount
+    ],
+    []
+  );
 
   return (
-    <Box component={Paper}>
+    <Box component={Paper} p={2}>
       <Helmet>
-        <title>Break Recon Data</title>
+        <title>Missing Reports</title>
       </Helmet>
-      <SharedTableComponent data={data} columns={columns} />
-      {(error || fetchError) && (
-        <Snackbar open autoHideDuration={6000}>
-          <Alert severity="error">{error || fetchError}</Alert>
-        </Snackbar>
-      )}
+
+      {/* CSV Export Hidden Link */}
+      <CSVLink
+        data={data}
+        headers={columns.map((col) => ({ label: col.header, key: col.accessorKey }))}
+        filename="table_data.csv"
+        ref={csvLinkRef}
+        style={{ display: 'none' }}
+      />
+
+      {/* Material React Table */}
+      <MaterialReactTable
+        columns={columns}
+        data={data}
+        enableSorting={true} // Enables sorting on columns
+        enableFullScreenToggle={true} // Full screen toggle
+        enableTopToolbar={true} // Displays the top toolbar with buttons
+        renderTopToolbarCustomActions={() => (
+          <Stack direction="row" spacing={2}>
+            {/* Export Buttons */}
+            <Button variant="contained" startIcon={<SaveAltIcon />} color="primary" onClick={() => csvLinkRef.current.link.click()}>
+              Export CSV
+            </Button>
+            <Button variant="contained" startIcon={<SaveAltIcon />} color="secondary" onClick={exportToXLSX}>
+              Export XLSX
+            </Button>
+          </Stack>
+        )}
+      />
     </Box>
   );
 };

@@ -1,48 +1,164 @@
-import React from 'react';
-import { Box, Paper, Snackbar, Alert } from '@mui/material';
+import React, { useMemo, useRef, useState } from 'react';
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { Box, Button, Paper, Stack } from '@mui/material';
 import { Helmet } from 'react-helmet';
-import SharedTableComponent from './../../utils/DynamicTable';
+import { SaveAlt as SaveAltIcon } from '@mui/icons-material';
+import { CSVLink } from 'react-csv';
+import * as XLSX from 'xlsx';
+import { citiesList, usStateList, data } from 'helpers/mock/makedata';
+import dayjs from 'dayjs';
 
-const BreakRecon = ({ error }) => {
-  // Static mock data for now
-  const data = [
-    { FundName: 'Fund A', Ticker: 'AAA' },
-    { FundName: 'Fund B', Ticker: 'BBB' },
-    { FundName: 'Fund C', Ticker: 'CCC' },
-    { FundName: 'Fund D', Ticker: 'DDD' },
-    { FundName: 'Fund E', Ticker: 'EEE' }
-  ];
+const MissingReports = () => {
+  const csvLinkRef = useRef(null);
 
-  // Add unique IDs to the static data
-  const dataWithIds = data.map((row, index) => ({ id: index + 1, ...row }));
+  const columns = useMemo(
+    () => [
+      {
+        header: 'Status',
+        accessorFn: (row) => (row.isActive ? 'true' : 'false'),
+        id: 'isActive',
+        filterVariant: 'checkbox',
+        Cell: ({ cell }) => (cell.getValue() === 'true' ? 'Active' : 'Inactive'),
+        size: 200
+      },
+      {
+        accessorKey: 'name',
+        header: 'Name',
+        filterVariant: 'text',
+        size: 250
+      },
+      {
+        accessorKey: 'salary',
+        header: 'Salary',
+        size: 250,
+        enableClickToCopy: true,
 
-  // Define static columns for the table
-  const columns = [
-    {
-      accessorKey: 'FundName',
-      header: 'Fund Name',
-      size: 200
+        Cell: ({ cell }) =>
+          cell.getValue().toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD'
+          }),
+        filterVariant: 'range-slider',
+        filterFn: 'betweenInclusive',
+        muiFilterSliderProps: {
+          marks: true,
+          max: 200000,
+          min: 30000,
+          step: 10000,
+          valueLabelFormat: (value) =>
+            value.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD'
+            })
+        }
+      },
+      {
+        accessorKey: 'age',
+        header: 'Age',
+        filterVariant: 'range',
+        filterFn: 'between',
+        size: 250
+      },
+      {
+        accessorKey: 'city',
+        header: 'City',
+        filterVariant: 'select',
+        filterSelectOptions: citiesList,
+        size: 250
+      },
+      {
+        accessorKey: 'state',
+        header: 'State',
+        filterVariant: 'multi-select',
+        filterSelectOptions: usStateList,
+        size: 300
+      },
+      {
+        accessorFn: (row) => (row.hireDate ? dayjs(row.hireDate) : null),
+        id: 'hireDate',
+        header: 'Hire Date',
+        filterVariant: 'date',
+        sortingFn: 'datetime',
+        Cell: ({ cell }) => dayjs(cell.getValue()).format('DD/MM/YYYY'),
+        muiFilterDatePickerProps: { format: 'DD/MM/YYYY' },
+        size: 250
+      },
+      {
+        accessorFn: (row) => new Date(row.arrivalTime),
+        id: 'arrivalTime',
+        header: 'Arrival Time',
+        filterVariant: 'datetime-range',
+        Cell: ({ cell }) => (cell.getValue() ? dayjs(cell.getValue()).format('DD/MM/YYYY HH:mm:ss') : ''),
+        size: 380
+      },
+      {
+        accessorFn: (row) => new Date(row.departureTime),
+        id: 'departureTime',
+        header: 'Departure Time',
+        filterVariant: 'time-range',
+        Cell: ({ cell }) => (cell.getValue() ? dayjs(cell.getValue()).format('HH:mm:ss') : ''),
+        size: 380
+      }
+    ],
+    []
+  );
+
+  const exportToXLSX = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    XLSX.writeFile(workbook, 'table_data.xlsx');
+  };
+
+  const table = useMaterialReactTable({
+    columns,
+    data,
+    enableRowSelection: true,
+    columnFilterDisplayMode: 'popover',
+    renderTopToolbarCustomActions: () => (
+      <>
+        <Stack direction="row" spacing={1}>
+          <Button variant="contained" startIcon={<SaveAltIcon />} color="primary" onClick={() => csvLinkRef.current.link.click()}>
+            Export CSV
+          </Button>
+          <Button variant="contained" startIcon={<SaveAltIcon />} color="secondary" onClick={exportToXLSX}>
+            Export XLSX
+          </Button>
+        </Stack>
+      </>
+    ),
+    enableRowNumbers: true,
+    rowNumberDisplayMode: 'original',
+    enablePagination: true,
+    paginationDisplayMode: 'pages',
+    muiPaginationProps: {
+      color: 'secondary',
+      rowsPerPageOptions: [10, 25, 50, 100],
+      shape: 'rounded',
+      variant: 'outlined'
     },
-    {
-      accessorKey: 'Ticker',
-      header: 'Ticker',
-      size: 200
-    }
-  ];
+    enableColumnResizing: true,
+    enableColumnDragging: true,
+    enableColumnOrdering: true
+  });
 
   return (
     <Box component={Paper}>
       <Helmet>
         <title>Static Price Preview</title>
       </Helmet>
-      <SharedTableComponent data={dataWithIds} columns={columns} />
-      {error && (
-        <Snackbar open autoHideDuration={6000}>
-          <Alert severity="error">{error}</Alert>
-        </Snackbar>
-      )}
+
+      <CSVLink
+        data={data}
+        headers={columns.map((col) => ({ label: col.header, key: col.accessorKey || col.id }))}
+        filename="table_data.csv"
+        ref={csvLinkRef}
+        style={{ display: 'none' }}
+      />
+
+      <MaterialReactTable table={table} />
     </Box>
   );
 };
 
-export default BreakRecon;
+export default MissingReports;

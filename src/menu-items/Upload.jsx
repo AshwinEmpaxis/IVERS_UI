@@ -1,11 +1,11 @@
 // assets
-import { ChromeOutlined, QuestionOutlined, CloudUploadOutlined, EyeTwoTone } from '@ant-design/icons';
+import { ChromeOutlined, QuestionOutlined, CloudUploadOutlined, EyeOutlined } from '@ant-design/icons';
 
 const icons = {
   ChromeOutlined,
   QuestionOutlined,
   CloudUploadOutlined,
-  EyeTwoTone
+  EyeOutlined
 };
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
@@ -27,7 +27,7 @@ const Upload = {
       title: 'View Data',
       type: 'item',
       url: '/view-data',
-      icon: icons.EyeTwoTone
+      icon: icons.EyeOutlined
     },
 
     {

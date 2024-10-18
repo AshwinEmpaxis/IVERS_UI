@@ -4,7 +4,6 @@ import { Button, Stack, Fade } from '@mui/material';
 import { SaveAlt as SaveAltIcon } from '@mui/icons-material';
 import { CSVLink } from 'react-csv';
 import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 
 //nested data is ok, see accessorKeys in ColumnDef below
 const data = [

@@ -7,7 +7,14 @@ import router from 'routes';
 import ThemeCustomization from 'themes';
 
 import ScrollTop from 'components/ScrollTop';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 // ==============================|| APP - THEME, ROUTER, LOCAL ||============================== //
 
 export default function App() {
@@ -15,7 +22,9 @@ export default function App() {
     <ThemeCustomization>
       <ScrollTop>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <LocalizationProvider dateAdapter={AdapterDayjs} locale="en">
+            <RouterProvider router={router} />
+          </LocalizationProvider>
         </AuthProvider>
       </ScrollTop>
     </ThemeCustomization>

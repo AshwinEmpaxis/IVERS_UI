@@ -17,6 +17,25 @@ export default function TableCell(theme) {
   };
 
   return {
+    MuiTableContainer: {
+      styleOverrides: {
+        root: {
+          position: 'relative'
+        }
+      }
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            backgroundColor: theme.palette.action.selected,
+            '&:hover': {
+              backgroundColor: theme.palette.action.hover
+            }
+          }
+        }
+      }
+    },
     MuiTableCell: {
       styleOverrides: {
         root: {
@@ -47,6 +66,7 @@ export default function TableCell(theme) {
           padding: 8
         },
         head: {
+          backgroundColor: theme.palette.background.neutral,
           fontSize: '0.75rem',
           fontWeight: 700,
           textTransform: 'uppercase',
@@ -56,6 +76,44 @@ export default function TableCell(theme) {
           fontSize: '0.75rem',
           textTransform: 'uppercase',
           ...commonCell
+        }
+      }
+    },
+    MuiTablePagination: {
+      defaultProps: {
+        backIconButtonProps: {
+          size: 'small'
+        },
+        nextIconButtonProps: {
+          size: 'small'
+        },
+        SelectProps: {
+          MenuProps: {
+            MenuListProps: {
+              sx: {
+                '& .MuiMenuItem-root': {
+                  ...theme.typography.body2
+                }
+              }
+            }
+          }
+        }
+      },
+
+      styleOverrides: {
+        root: {
+          borderTop: `solid 1px ${theme.palette.divider}`
+        },
+        toolbar: {
+          height: 64
+        },
+        actions: {
+          marginRight: theme.spacing(1)
+        },
+        select: {
+          '&:focus': {
+            borderRadius: theme.shape.borderRadius
+          }
         }
       }
     }

@@ -17,25 +17,26 @@ import Tab from './Tab';
 import TableCell from './TableCell';
 import Tabs from './Tabs';
 import Typography from './Typography';
-
+import DataGrid from './DataGrid';
 // ==============================|| OVERRIDES - MAIN ||============================== //
 
 export default function ComponentsOverrides(theme) {
   return merge(
     Button(theme),
     Badge(theme),
-    CardContent(),
+    CardContent(theme),
     Checkbox(theme),
     Chip(theme),
     IconButton(theme),
     InputLabel(theme),
     LinearProgress(),
-    Link(),
-    ListItemIcon(),
+    Link(theme),
+    ListItemIcon(theme),
     OutlinedInput(theme),
     Tab(theme),
     TableCell(theme),
-    Tabs(),
-    Typography()
+    Tabs(theme),
+    Typography(theme),
+    DataGrid(theme)
   );
 }

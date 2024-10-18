@@ -7,7 +7,7 @@ import upload from './Upload';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [upload]
+  items: [upload, dashboard]
 };
 
 export default menuItems;

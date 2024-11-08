@@ -5,7 +5,7 @@ import { citiesList, usStateList, data } from 'helpers/mock/makedata';
 import dayjs from 'dayjs';
 import ExportData from 'components/Export/ExportData';
 
-const MissingReports = () => {
+const FullMatchReport = () => {
   const columns = useMemo(
     () => [
       {
@@ -27,7 +27,6 @@ const MissingReports = () => {
         header: 'Salary',
         size: 250,
         enableClickToCopy: true,
-
         Cell: ({ cell }) =>
           cell.getValue().toLocaleString('en-US', {
             style: 'currency',
@@ -101,16 +100,17 @@ const MissingReports = () => {
   const table = useMaterialReactTable({
     columns,
     data,
-    enableRowSelection: true,
+    enableRowSelection: false,
+
     renderTopToolbarCustomActions: () => (
       <>
         <ExportData
-          color="info"
+          color="primary"
           variant="contained"
           data={data}
           columns={columns}
-          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml', 'json']}
-          ExportFileName="ToleranceReports"
+          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml']}
+          ExportFileName="FullMatchReport"
           isLoading={false}
           componentVariant="Menu"
         />
@@ -135,13 +135,19 @@ const MissingReports = () => {
           backgroundColor: '#e6f4ff'
         }
       }
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#1976d2',
+        color: 'white'
+      }
     }
   });
 
   return (
     <>
       <Helmet>
-        <title>Tolerance Reports</title>
+        <title>FullMatch Report</title>
       </Helmet>
 
       <MaterialReactTable table={table} />
@@ -149,4 +155,4 @@ const MissingReports = () => {
   );
 };
 
-export default MissingReports;
+export default FullMatchReport;

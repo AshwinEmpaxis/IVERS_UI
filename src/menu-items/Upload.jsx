@@ -32,20 +32,18 @@ const Upload = {
 
     {
       id: 'generated-reports',
-      title: 'Generated-Data',
+      title: 'Reports',
       type: 'item',
       url: '/generated-reports',
       icon: icons.ChromeOutlined
+    },
+    {
+      id: 'lookup-reports',
+      title: 'Lookup Data',
+      type: 'item',
+      url: '/lookup-reports',
+      icon: icons.QuestionOutlined
     }
-    // {
-    //   id: 'documentation',
-    //   title: 'Documentation',
-    //   type: 'item',
-    //   url: '/documentation',
-    //   icon: icons.QuestionOutlined,
-    //   external: true,
-    //   target: true
-    // }
   ]
 };
 

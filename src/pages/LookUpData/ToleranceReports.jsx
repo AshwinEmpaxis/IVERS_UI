@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table';
+import { MaterialReactTable } from 'material-react-table';
 import { Helmet } from 'react-helmet';
 import { citiesList, usStateList, data } from 'helpers/mock/makedata';
 import dayjs from 'dayjs';
 import ExportData from 'components/Export/ExportData';
 
-const SkippedReport = () => {
+const NearMatchReports = () => {
   const columns = useMemo(
     () => [
       {
@@ -97,62 +97,57 @@ const SkippedReport = () => {
     []
   );
 
-  const table = useMaterialReactTable({
-    columns,
-    data,
-    enableRowSelection: false,
-
-    renderTopToolbarCustomActions: () => (
-      <>
-        <ExportData
-          color="primary"
-          variant="contained"
-          data={data}
-          columns={columns}
-          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml']}
-          ExportFileName="FullMatchReport"
-          isLoading={false}
-          componentVariant="Menu"
-        />
-      </>
-    ),
-    enableRowNumbers: true,
-    rowNumberDisplayMode: 'original',
-    enablePagination: true,
-    paginationDisplayMode: 'pages',
-    muiPaginationProps: {
-      color: 'secondary',
-      rowsPerPageOptions: [10, 25, 50, 100],
-      shape: 'rounded',
-      variant: 'outlined'
-    },
-    enableColumnResizing: true,
-    enableColumnDragging: true,
-    enableColumnOrdering: true,
-    muiTableBodyProps: {
-      sx: {
-        '& tr:nth-of-type(odd) > td': {
-          backgroundColor: '#e6f4ff'
-        }
-      }
-    },
-    muiTableHeadCellProps: {
-      sx: {
-        backgroundColor: '#1976d2', // Set header background color
-        color: 'white' // Set header text color
-      }
-    }
-  });
-
   return (
     <>
       <Helmet>
-        <title>FullMatch Report</title>
+        <title>NearMatch Reports</title>
       </Helmet>
 
-      <MaterialReactTable table={table} />
+      <MaterialReactTable
+        columns={columns}
+        data={data}
+        enableRowSelection={true} // Enable row selection (checkboxes)
+        renderTopToolbarCustomActions={() => (
+          <ExportData
+            color="primary"
+            variant="contained"
+            data={data}
+            columns={columns}
+            exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml', 'json']}
+            ExportFileName="YourExport"
+            isLoading={false}
+            componentVariant="Menu"
+          />
+        )}
+        enableRowNumbers
+        rowNumberDisplayMode="original"
+        enablePagination
+        paginationDisplayMode="pages"
+        muiPaginationProps={{
+          color: 'secondary',
+          rowsPerPageOptions: [10, 25, 50, 100],
+          shape: 'rounded',
+          variant: 'outlined'
+        }}
+        enableColumnResizing
+        enableColumnDragging
+        enableColumnOrdering
+        muiTableBodyProps={{
+          sx: {
+            '& tr:nth-of-type(odd) > td': {
+              backgroundColor: '#e6f4ff' // Background color for odd rows
+            }
+          }
+        }}
+        muiTableHeadCellProps={{
+          sx: {
+            backgroundColor: '#1976d2', // Background color for headers
+            color: 'white' // Text color for headers
+          }
+        }}
+      />
     </>
   );
 };
 
-export default SkippedReport;
+export default NearMatchReports;

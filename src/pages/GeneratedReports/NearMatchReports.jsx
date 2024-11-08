@@ -5,7 +5,7 @@ import { citiesList, usStateList, data } from 'helpers/mock/makedata';
 import dayjs from 'dayjs';
 import ExportData from 'components/Export/ExportData';
 
-const NearMatchReports = () => {
+const FullMatchReport = () => {
   const columns = useMemo(
     () => [
       {
@@ -27,7 +27,6 @@ const NearMatchReports = () => {
         header: 'Salary',
         size: 250,
         enableClickToCopy: true,
-
         Cell: ({ cell }) =>
           cell.getValue().toLocaleString('en-US', {
             style: 'currency',
@@ -101,17 +100,17 @@ const NearMatchReports = () => {
   const table = useMaterialReactTable({
     columns,
     data,
-    enableRowSelection: true,
+    enableRowSelection: false,
 
     renderTopToolbarCustomActions: () => (
       <>
         <ExportData
-          color="info"
+          color="primary" // Matching color with 'Download'
           variant="contained"
           data={data}
           columns={columns}
-          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml', 'json']}
-          ExportFileName="YourExport"
+          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml']}
+          ExportFileName="FullMatchReport"
           isLoading={false}
           componentVariant="Menu"
         />
@@ -136,13 +135,19 @@ const NearMatchReports = () => {
           backgroundColor: '#e6f4ff'
         }
       }
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#1976d2', // Set header background color
+        color: 'white' // Set header text color
+      }
     }
   });
 
   return (
     <>
       <Helmet>
-        <title>NearMatch Reports</title>
+        <title>FullMatch Report</title>
       </Helmet>
 
       <MaterialReactTable table={table} />
@@ -150,4 +155,4 @@ const NearMatchReports = () => {
   );
 };
 
-export default NearMatchReports;
+export default FullMatchReport;

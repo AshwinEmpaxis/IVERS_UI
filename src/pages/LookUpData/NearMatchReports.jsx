@@ -5,7 +5,7 @@ import { citiesList, usStateList, data } from 'helpers/mock/makedata';
 import dayjs from 'dayjs';
 import ExportData from 'components/Export/ExportData';
 
-const SkippedReport = () => {
+const NearMatchReports = () => {
   const columns = useMemo(
     () => [
       {
@@ -27,6 +27,7 @@ const SkippedReport = () => {
         header: 'Salary',
         size: 250,
         enableClickToCopy: true,
+
         Cell: ({ cell }) =>
           cell.getValue().toLocaleString('en-US', {
             style: 'currency',
@@ -105,12 +106,12 @@ const SkippedReport = () => {
     renderTopToolbarCustomActions: () => (
       <>
         <ExportData
-          color="primary"
+          color="info"
           variant="contained"
           data={data}
           columns={columns}
-          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml']}
-          ExportFileName="FullMatchReport"
+          exportTypes={['csv', 'excel', 'txt', 'pdf', 'xml', 'json']}
+          ExportFileName="YourExport"
           isLoading={false}
           componentVariant="Menu"
         />
@@ -138,8 +139,8 @@ const SkippedReport = () => {
     },
     muiTableHeadCellProps: {
       sx: {
-        backgroundColor: '#1976d2', // Set header background color
-        color: 'white' // Set header text color
+        backgroundColor: '#1976d2',
+        color: 'white'
       }
     }
   });
@@ -147,7 +148,7 @@ const SkippedReport = () => {
   return (
     <>
       <Helmet>
-        <title>FullMatch Report</title>
+        <title>NearMatch Reports</title>
       </Helmet>
 
       <MaterialReactTable table={table} />
@@ -155,4 +156,4 @@ const SkippedReport = () => {
   );
 };
 
-export default SkippedReport;
+export default NearMatchReports;
